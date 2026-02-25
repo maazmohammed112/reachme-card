@@ -6,56 +6,56 @@
 
 @layer base {
   :root {
-    --background: 220 25% 14%;
-    --foreground: 210 20% 95%;
+    --background: 0 0% 97%;
+    --foreground: 220 40% 13%;
 
-    --card: 220 22% 19%;
-    --card-foreground: 210 20% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 40% 13%;
 
-    --popover: 220 22% 19%;
-    --popover-foreground: 210 20% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 40% 13%;
 
-    --primary: 215 80% 55%;
+    --primary: 220 65% 28%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 20% 26%;
-    --secondary-foreground: 210 20% 90%;
+    --secondary: 220 20% 92%;
+    --secondary-foreground: 220 40% 13%;
 
-    --muted: 220 18% 24%;
-    --muted-foreground: 215 15% 60%;
+    --muted: 220 14% 92%;
+    --muted-foreground: 220 10% 46%;
 
-    --accent: 215 80% 55%;
+    --accent: 0 78% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 30%;
-    --input: 220 15% 30%;
-    --ring: 215 80% 55%;
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 220 65% 28%;
 
     --radius: 14px;
 
     /* Custom tokens */
-    --navy: 220 40% 18%;
-    --navy-deep: 220 45% 10%;
-    --navy-light: 220 25% 28%;
-    --whatsapp: 142 70% 42%;
-    --whatsapp-glow: 142 70% 52%;
-    --call: 215 80% 55%;
-    --call-glow: 215 80% 65%;
-    --glass: 220 20% 22%;
-    --glass-border: 220 15% 35%;
-    --shimmer: 215 60% 70%;
+    --navy: 220 65% 28%;
+    --navy-deep: 220 65% 18%;
+    --navy-light: 220 40% 40%;
+    --whatsapp: 142 70% 38%;
+    --whatsapp-glow: 142 70% 45%;
+    --call: 220 65% 28%;
+    --call-glow: 220 55% 40%;
+    --glass: 220 30% 96%;
+    --glass-border: 220 20% 85%;
+    --shimmer: 220 40% 50%;
 
-    --sidebar-background: 220 25% 14%;
-    --sidebar-foreground: 210 20% 95%;
-    --sidebar-primary: 215 80% 55%;
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 220 40% 13%;
+    --sidebar-primary: 220 65% 28%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 20% 26%;
-    --sidebar-accent-foreground: 210 20% 90%;
-    --sidebar-border: 220 15% 30%;
-    --sidebar-ring: 215 80% 55%;
+    --sidebar-accent: 220 20% 92%;
+    --sidebar-accent-foreground: 220 40% 13%;
+    --sidebar-border: 220 13% 88%;
+    --sidebar-ring: 220 65% 28%;
   }
 }
 
@@ -83,10 +83,18 @@
 }
 
 @layer utilities {
-  .glass-card {
-    background: hsl(var(--glass) / 0.6);
-    backdrop-filter: blur(16px);
-    border: 1px solid hsl(var(--glass-border) / 0.5);
+  .auto-card {
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+    box-shadow: 0 2px 16px hsl(220 40% 13% / 0.06), 0 1px 4px hsl(220 40% 13% / 0.04);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .auto-card-navy {
+    background: hsl(var(--navy));
+    border-radius: var(--radius);
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 20px hsl(220 65% 18% / 0.25), 0 2px 6px hsl(220 65% 18% / 0.15);
   }
 
   .btn-3d {
@@ -94,46 +102,61 @@
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .btn-3d:active {
-    transform: translateY(2px);
+    transform: translateY(2px) scale(0.97);
   }
 
   .btn-3d-call {
-    background: linear-gradient(135deg, hsl(var(--call)), hsl(var(--call-glow)));
-    box-shadow: 0 4px 14px hsl(var(--call) / 0.4), 0 2px 4px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.15);
+    background: hsl(var(--navy));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 14px hsl(var(--navy) / 0.3), 0 2px 4px hsl(0 0% 0% / 0.1);
   }
   .btn-3d-call:hover {
-    box-shadow: 0 6px 20px hsl(var(--call) / 0.5), 0 2px 4px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.2);
+    background: hsl(var(--navy-light));
+    box-shadow: 0 6px 20px hsl(var(--navy) / 0.4), 0 2px 4px hsl(0 0% 0% / 0.1);
     transform: translateY(-1px);
   }
 
   .btn-3d-whatsapp {
-    background: linear-gradient(135deg, hsl(var(--whatsapp)), hsl(var(--whatsapp-glow)));
-    box-shadow: 0 4px 14px hsl(var(--whatsapp) / 0.4), 0 2px 4px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.15);
+    background: hsl(var(--whatsapp));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 14px hsl(var(--whatsapp) / 0.3), 0 2px 4px hsl(0 0% 0% / 0.1);
   }
   .btn-3d-whatsapp:hover {
-    box-shadow: 0 6px 20px hsl(var(--whatsapp) / 0.5), 0 2px 4px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.2);
+    background: hsl(var(--whatsapp-glow));
+    box-shadow: 0 6px 20px hsl(var(--whatsapp) / 0.4), 0 2px 4px hsl(0 0% 0% / 0.1);
     transform: translateY(-1px);
   }
 
   .btn-3d-outline {
-    background: hsl(var(--glass) / 0.4);
-    border: 1px solid hsl(var(--glass-border) / 0.6);
-    box-shadow: 0 2px 8px hsl(0 0% 0% / 0.15), inset 0 1px 0 hsl(0 0% 100% / 0.08);
+    background: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+    box-shadow: 0 2px 8px hsl(0 0% 0% / 0.05);
   }
   .btn-3d-outline:hover {
-    background: hsl(var(--glass) / 0.7);
-    box-shadow: 0 4px 12px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.1);
+    background: hsl(var(--muted));
+    box-shadow: 0 4px 12px hsl(0 0% 0% / 0.08);
+    transform: translateY(-1px);
+  }
+
+  .btn-accent {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    box-shadow: 0 4px 14px hsl(var(--accent) / 0.3), 0 2px 4px hsl(0 0% 0% / 0.1);
+  }
+  .btn-accent:hover {
+    box-shadow: 0 6px 20px hsl(var(--accent) / 0.4);
     transform: translateY(-1px);
   }
 
   .card-glow {
-    box-shadow: 0 0 0 1px hsl(var(--glass-border) / 0.3), 0 8px 32px hsl(0 0% 0% / 0.2), 0 2px 8px hsl(0 0% 0% / 0.1);
+    box-shadow: 0 2px 16px hsl(220 40% 13% / 0.06), 0 1px 4px hsl(220 40% 13% / 0.04);
   }
 
   .header-blur {
-    background: hsl(var(--navy-deep) / 0.85);
+    background: hsl(var(--navy));
     backdrop-filter: blur(20px) saturate(1.5);
-    border-bottom: 1px solid hsl(var(--glass-border) / 0.3);
+    border-bottom: 1px solid hsl(var(--navy-light) / 0.3);
   }
 
   .shimmer {
@@ -147,9 +170,9 @@
     background: linear-gradient(
       105deg,
       transparent 40%,
-      hsl(var(--shimmer) / 0.06) 45%,
-      hsl(var(--shimmer) / 0.1) 50%,
-      hsl(var(--shimmer) / 0.06) 55%,
+      hsl(var(--shimmer) / 0.04) 45%,
+      hsl(var(--shimmer) / 0.08) 50%,
+      hsl(var(--shimmer) / 0.04) 55%,
       transparent 60%
     );
     animation: shimmer-move 3s ease-in-out infinite;
@@ -158,5 +181,21 @@
   @keyframes shimmer-move {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
+  }
+
+  .icon-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 12px;
+    background: hsl(var(--navy) / 0.1);
+    color: hsl(var(--navy));
+  }
+
+  .icon-badge-white {
+    background: hsl(0 0% 100% / 0.15);
+    color: hsl(0 0% 100%);
   }
 }
