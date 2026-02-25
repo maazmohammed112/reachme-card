@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Phone, MessageCircle, MapPin, Mail, Car, Shield } from "lucide-react";
+import { Phone, MessageCircle, MapPin, Mail, Car, Shield, ChevronRight } from "lucide-react";
 import logo from "@/assets/reach-logo.png";
 import LoadingScreen from "@/components/LoadingScreen";
 import WarningModal from "@/components/WarningModal";
@@ -33,22 +33,22 @@ const Index = () => {
       </header>
 
       <main className="px-4 py-6 pb-10 space-y-5 max-w-md mx-auto">
-        {/* Vehicle Info */}
+        {/* Vehicle Info - Navy card */}
         <Section delay={0}>
-          <div className="glass-card rounded-lg p-5 card-glow shimmer">
+          <div className="auto-card-navy p-5 shimmer">
             <div className="flex items-center gap-3 mb-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
-                <Car size={18} className="text-primary" />
+              <div className="icon-badge-white rounded-xl">
+                <Car size={18} />
               </div>
               <div>
-                <p className="text-lg font-bold tracking-wide text-foreground">KA 05 MQ 1326</p>
-                <p className="text-xs text-muted-foreground">Ertiga Maruti Suzuki</p>
+                <p className="text-lg font-bold tracking-wide">KA 05 MQ 1326</p>
+                <p className="text-xs opacity-70">Ertiga Maruti Suzuki</p>
               </div>
             </div>
-            <div className="my-3 h-px bg-border/50" />
+            <div className="my-3 h-px bg-primary-foreground/15" />
             <div className="flex items-start gap-2">
-              <Shield size={14} className="text-muted-foreground mt-0.5 shrink-0" />
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <Shield size={14} className="opacity-60 mt-0.5 shrink-0" />
+              <p className="text-xs opacity-70 leading-relaxed">
                 Sorry for any inconvenience caused.
                 <br />
                 Thank you for your understanding.
@@ -60,7 +60,7 @@ const Index = () => {
         {/* Primary Contact */}
         <Section delay={1}>
           <SectionTitle>Primary Number</SectionTitle>
-          <div className="glass-card rounded-lg p-5 card-glow">
+          <div className="auto-card p-5">
             <p className="text-center text-base font-semibold tracking-[0.2em] text-foreground">+91 ******5584</p>
             <ContactButtons
               onCall={() => setModalAction({ type: "call", number: "+918951225584" })}
@@ -72,7 +72,7 @@ const Index = () => {
         {/* Alternate Contact */}
         <Section delay={2}>
           <SectionTitle>Alternate Number</SectionTitle>
-          <div className="glass-card rounded-lg p-5 card-glow">
+          <div className="auto-card p-5">
             <p className="text-center text-base font-semibold tracking-[0.2em] text-foreground">+91 ******7067</p>
             <ContactButtons
               onCall={() => setModalAction({ type: "call", number: "+919108167067" })}
@@ -84,7 +84,7 @@ const Index = () => {
         {/* Location */}
         <Section delay={3}>
           <SectionTitle>Location</SectionTitle>
-          <div className="glass-card rounded-lg p-5 card-glow">
+          <div className="auto-card p-5">
             <p className="text-sm text-muted-foreground text-center leading-relaxed">
               Amar Layout, Bangalore, Karnataka, 560045, India
             </p>
@@ -96,10 +96,11 @@ const Index = () => {
                     "_blank"
                   )
                 }
-                className="btn-3d btn-3d-outline flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium text-foreground"
+                className="btn-3d btn-3d-call flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium"
               >
                 <MapPin size={16} />
                 Show on Map
+                <ChevronRight size={14} className="opacity-60" />
               </button>
             </div>
           </div>
@@ -107,15 +108,16 @@ const Index = () => {
 
         {/* Custom Sticker CTA */}
         <Section delay={4}>
-          <div className="glass-card rounded-lg p-5 card-glow animate-glow-pulse">
-            <p className="text-center text-sm font-medium text-foreground/90">Want to make your custom sticker?</p>
+          <div className="auto-card-navy p-5 animate-glow-pulse">
+            <p className="text-center text-sm font-medium opacity-90">Want to make your custom sticker?</p>
             <div className="mt-4 flex justify-center">
               <button
                 onClick={() => window.open("mailto:maazmohammed112@gmail.com", "_self")}
-                className="btn-3d btn-3d-call flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-semibold text-primary-foreground"
+                className="btn-3d btn-accent flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-semibold"
               >
                 <Mail size={16} />
                 Contact Us
+                <ChevronRight size={14} className="opacity-60" />
               </button>
             </div>
           </div>
@@ -123,8 +125,8 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 py-5" style={{ background: "hsl(220 45% 10% / 0.6)" }}>
-        <p className="text-center text-xs text-muted-foreground">© 2026 Registered REACH.MME</p>
+      <footer className="py-5" style={{ background: "hsl(220 65% 18%)" }}>
+        <p className="text-center text-xs" style={{ color: "hsl(0 0% 100% / 0.6)" }}>© 2026 Registered REACH.MME</p>
       </footer>
 
       <WarningModal
@@ -155,14 +157,14 @@ const ContactButtons = ({ onCall, onWhatsApp }: { onCall: () => void; onWhatsApp
   <div className="mt-4 flex gap-3">
     <button
       onClick={onCall}
-      className="btn-3d btn-3d-call flex flex-1 items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold text-primary-foreground"
+      className="btn-3d btn-3d-call flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold"
     >
       <Phone size={16} />
       Call
     </button>
     <button
       onClick={onWhatsApp}
-      className="btn-3d btn-3d-whatsapp flex flex-1 items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold text-primary-foreground"
+      className="btn-3d btn-3d-whatsapp flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold"
     >
       <MessageCircle size={16} />
       WhatsApp
