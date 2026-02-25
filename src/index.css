@@ -6,50 +6,56 @@
 
 @layer base {
   :root {
-    --background: 216 40% 8%;
-    --foreground: 0 0% 100%;
+    --background: 220 25% 14%;
+    --foreground: 210 20% 95%;
 
-    --card: 216 35% 12%;
-    --card-foreground: 0 0% 100%;
+    --card: 220 22% 19%;
+    --card-foreground: 210 20% 95%;
 
-    --popover: 216 35% 12%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 220 22% 19%;
+    --popover-foreground: 210 20% 95%;
 
-    --primary: 210 60% 45%;
+    --primary: 215 80% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 216 30% 18%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 20% 26%;
+    --secondary-foreground: 210 20% 90%;
 
-    --muted: 216 25% 22%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 220 18% 24%;
+    --muted-foreground: 215 15% 60%;
 
-    --accent: 210 60% 45%;
+    --accent: 215 80% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 25% 28%;
-    --input: 215 25% 28%;
-    --ring: 210 60% 45%;
+    --border: 220 15% 30%;
+    --input: 220 15% 30%;
+    --ring: 215 80% 55%;
 
-    --radius: 12px;
-
-    --sidebar-background: 216 40% 8%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 210 60% 45%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 216 30% 18%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 215 25% 28%;
-    --sidebar-ring: 210 60% 45%;
+    --radius: 14px;
 
     /* Custom tokens */
-    --navy: 216 40% 8%;
-    --navy-light: 216 35% 14%;
-    --whatsapp: 142 70% 40%;
-    --call: 210 60% 50%;
+    --navy: 220 40% 18%;
+    --navy-deep: 220 45% 10%;
+    --navy-light: 220 25% 28%;
+    --whatsapp: 142 70% 42%;
+    --whatsapp-glow: 142 70% 52%;
+    --call: 215 80% 55%;
+    --call-glow: 215 80% 65%;
+    --glass: 220 20% 22%;
+    --glass-border: 220 15% 35%;
+    --shimmer: 215 60% 70%;
+
+    --sidebar-background: 220 25% 14%;
+    --sidebar-foreground: 210 20% 95%;
+    --sidebar-primary: 215 80% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 26%;
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 220 15% 30%;
+    --sidebar-ring: 215 80% 55%;
   }
 }
 
@@ -73,5 +79,84 @@
 
   body::-webkit-scrollbar {
     display: none;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    background: hsl(var(--glass) / 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--glass-border) / 0.5);
+  }
+
+  .btn-3d {
+    transform: translateY(0);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .btn-3d:active {
+    transform: translateY(2px);
+  }
+
+  .btn-3d-call {
+    background: linear-gradient(135deg, hsl(var(--call)), hsl(var(--call-glow)));
+    box-shadow: 0 4px 14px hsl(var(--call) / 0.4), 0 2px 4px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.15);
+  }
+  .btn-3d-call:hover {
+    box-shadow: 0 6px 20px hsl(var(--call) / 0.5), 0 2px 4px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.2);
+    transform: translateY(-1px);
+  }
+
+  .btn-3d-whatsapp {
+    background: linear-gradient(135deg, hsl(var(--whatsapp)), hsl(var(--whatsapp-glow)));
+    box-shadow: 0 4px 14px hsl(var(--whatsapp) / 0.4), 0 2px 4px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.15);
+  }
+  .btn-3d-whatsapp:hover {
+    box-shadow: 0 6px 20px hsl(var(--whatsapp) / 0.5), 0 2px 4px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.2);
+    transform: translateY(-1px);
+  }
+
+  .btn-3d-outline {
+    background: hsl(var(--glass) / 0.4);
+    border: 1px solid hsl(var(--glass-border) / 0.6);
+    box-shadow: 0 2px 8px hsl(0 0% 0% / 0.15), inset 0 1px 0 hsl(0 0% 100% / 0.08);
+  }
+  .btn-3d-outline:hover {
+    background: hsl(var(--glass) / 0.7);
+    box-shadow: 0 4px 12px hsl(0 0% 0% / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.1);
+    transform: translateY(-1px);
+  }
+
+  .card-glow {
+    box-shadow: 0 0 0 1px hsl(var(--glass-border) / 0.3), 0 8px 32px hsl(0 0% 0% / 0.2), 0 2px 8px hsl(0 0% 0% / 0.1);
+  }
+
+  .header-blur {
+    background: hsl(var(--navy-deep) / 0.85);
+    backdrop-filter: blur(20px) saturate(1.5);
+    border-bottom: 1px solid hsl(var(--glass-border) / 0.3);
+  }
+
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      hsl(var(--shimmer) / 0.06) 45%,
+      hsl(var(--shimmer) / 0.1) 50%,
+      hsl(var(--shimmer) / 0.06) 55%,
+      transparent 60%
+    );
+    animation: shimmer-move 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer-move {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
   }
 }
