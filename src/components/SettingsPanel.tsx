@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Settings, Eye, EyeOff, X, Phone as PhoneIcon, Flame, Siren } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Settings, Eye, EyeOff, X, Timer } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface SettingsPanelProps {
@@ -9,20 +9,47 @@ interface SettingsPanelProps {
   currentState: boolean;
 }
 
+const AUTO_LOGOUT_SECONDS = 60;
+
 const SettingsPanel = ({ open, onClose, onToggle, currentState }: SettingsPanelProps) => {
   const [loading, setLoading] = useState(false);
+  const [countdown, setCountdown] = useState(AUTO_LOGOUT_SECONDS);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Auto-logout countdown
+  useEffect(() => {
+    if (!open) {
+      setCountdown(AUTO_LOGOUT_SECONDS);
+      return;
+    }
+    setCountdown(AUTO_LOGOUT_SECONDS);
+    timerRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          onClose();
+          return AUTO_LOGOUT_SECONDS;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [open, onClose]);
 
   if (!open) return null;
 
   const handleToggle = async () => {
     setLoading(true);
     const newState = !currentState;
+    // Immediate UI update
+    onToggle(newState);
+    // Save to Cloud in background
     // @ts-ignore - table types not yet regenerated
     await supabase
       .from("vehicle_settings")
       .update({ show_details: newState, updated_at: new Date().toISOString() })
       .eq("id", 1);
-    onToggle(newState);
     setLoading(false);
   };
 
@@ -37,9 +64,15 @@ const SettingsPanel = ({ open, onClose, onToggle, currentState }: SettingsPanelP
             <Settings size={18} className="text-primary" />
             <h3 className="text-sm font-bold text-foreground">Owner Settings</h3>
           </div>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
-            <X size={18} />
-          </button>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Timer size={12} />
+              <span className="font-mono">{countdown}s</span>
+            </div>
+            <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
         {/* Toggle */}
@@ -74,7 +107,7 @@ const SettingsPanel = ({ open, onClose, onToggle, currentState }: SettingsPanelP
           </div>
         )}
 
-        <p className="text-xs text-muted-foreground text-center mt-2">Changes are saved automatically</p>
+        <p className="text-xs text-muted-foreground text-center mt-2">Auto-logout in {countdown}s · Changes saved instantly</p>
       </div>
     </div>
   );
