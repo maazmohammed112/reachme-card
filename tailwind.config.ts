@@ -116,6 +116,7 @@ export default {
         "modal-in": "modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "float": "float 3s ease-in-out infinite",
         "glow-pulse": "glow-pulse 2.5s ease-in-out infinite",
+        "slide-up": "slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
       },
     },
   },
