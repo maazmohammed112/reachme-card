@@ -6,7 +6,7 @@ import WarningModal from "@/components/WarningModal";
 import PinModal from "@/components/PinModal";
 import SettingsPanel from "@/components/SettingsPanel";
 import EmergencyContacts from "@/components/EmergencyContacts";
-import { fetchShowDetails } from "@/lib/supabase-safe";
+import { supabase } from "@/integrations/supabase/client";
 
 type ModalAction = { type: "call" | "whatsapp"; number: string } | null;
 
@@ -17,8 +17,14 @@ const Index = () => {
   const [pinOpen, setPinOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  // Fetch preference from Cloud
   useEffect(() => {
-    fetchShowDetails().then((val) => setShowDetails(val));
+    const fetchSettings = async () => {
+      // @ts-ignore
+      const { data } = await supabase.from("vehicle_settings").select("show_details").eq("id", 1).single();
+      if (data) setShowDetails((data as any).show_details);
+    };
+    fetchSettings();
   }, []);
 
   const handleContinue = useCallback(() => {
