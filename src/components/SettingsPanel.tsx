@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Settings, Eye, EyeOff, X, Timer } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { updateShowDetails } from "@/lib/supabase-safe";
 
 interface SettingsPanelProps {
   open: boolean;
