@@ -45,11 +45,14 @@ const SettingsPanel = ({ open, onClose, onToggle, currentState }: SettingsPanelP
     // Immediate UI update
     onToggle(newState);
     // Save to Cloud in background
-    // @ts-ignore - table types not yet regenerated
-    await supabase
-      .from("vehicle_settings")
-      .update({ show_details: newState, updated_at: new Date().toISOString() })
-      .eq("id", 1);
+    try {
+      await supabase
+        .from("vehicle_settings")
+        .update({ show_details: newState, updated_at: new Date().toISOString() })
+        .eq("id", 1);
+    } catch (err) {
+      console.error("Failed to save settings:", err);
+    }
     setLoading(false);
   };
 

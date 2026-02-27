@@ -20,9 +20,12 @@ const Index = () => {
   // Fetch preference from Cloud
   useEffect(() => {
     const fetchSettings = async () => {
-      // @ts-ignore
-      const { data } = await supabase.from("vehicle_settings").select("show_details").eq("id", 1).single();
-      if (data) setShowDetails((data as any).show_details);
+      try {
+        const { data, error } = await supabase.from("vehicle_settings").select("show_details").eq("id", 1).single();
+        if (!error && data) setShowDetails(data.show_details);
+      } catch (err) {
+        console.error("Failed to fetch settings:", err);
+      }
     };
     fetchSettings();
   }, []);
