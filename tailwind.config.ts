@@ -103,10 +103,6 @@ export default {
           "0%, 100%": { boxShadow: "0 0 20px hsl(215 80% 55% / 0.15)" },
           "50%": { boxShadow: "0 0 30px hsl(215 80% 55% / 0.3)" },
         },
-        "slide-up": {
-          "0%": { opacity: "0", transform: "translateY(100%)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -116,7 +112,6 @@ export default {
         "modal-in": "modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "float": "float 3s ease-in-out infinite",
         "glow-pulse": "glow-pulse 2.5s ease-in-out infinite",
-        "slide-up": "slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
       },
     },
   },
