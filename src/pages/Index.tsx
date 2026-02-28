@@ -113,8 +113,8 @@ const Index = () => {
         {/* Custom Sticker CTA */}
         <Section delay={4}>
           <div className="auto-card-navy p-6 animate-glow-pulse">
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <Sparkles size={14} className="opacity-70" />
+            <div className="flex items-center justify-center gap-2.5 mb-1">
+              <img src={logo} alt="REACH.MME" className="h-5 opacity-90" />
               <p className="text-center text-sm font-medium opacity-90">Want to make your custom sticker?</p>
             </div>
             <div className="mt-4 flex justify-center">
