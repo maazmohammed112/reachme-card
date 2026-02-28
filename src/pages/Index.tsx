@@ -1,14 +1,54 @@
-import { useState, useCallback } from "react";
-import { Phone, MessageCircle, MapPin, Mail, Car, Shield, ChevronRight, Sparkles } from "lucide-react";
+import { useState, useCallback, useEffect } from "react";
+import { Phone, MessageCircle, MapPin, Mail, Car, Shield, ChevronRight, Sparkles, AlertCircle } from "lucide-react";
 import logo from "@/assets/reach-logo.png";
 import LoadingScreen from "@/components/LoadingScreen";
 import WarningModal from "@/components/WarningModal";
+import UserPanel from "@/components/UserPanel";
+import { supabase } from "@/integrations/supabase/client";
 
 type ModalAction = { type: "call" | "whatsapp"; number: string } | null;
+
+const EMERGENCY_NUMBERS = [
+  { label: "Police", number: "100" },
+  { label: "Ambulance", number: "108" },
+  { label: "Fire", number: "101" },
+  { label: "Emergency", number: "112" },
+];
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
   const [modalAction, setModalAction] = useState<ModalAction>(null);
+  const [showDetails, setShowDetails] = useState(true);
+  const [userPanelOpen, setUserPanelOpen] = useState(false);
+
+  // Fetch toggle state from cloud
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await supabase
+        .from("vehicle_settings")
+        .select("show_details")
+        .eq("id", 1)
+        .single();
+      if (data) setShowDetails(data.show_details);
+    };
+    fetch();
+
+    // Realtime subscription for instant updates
+    const channel = supabase
+      .channel("vehicle_settings_changes")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "vehicle_settings" },
+        (payload) => {
+          if (payload.new && typeof (payload.new as any).show_details === "boolean") {
+            setShowDetails((payload.new as any).show_details);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, []);
 
   const handleContinue = useCallback(() => {
     if (!modalAction) return;
@@ -33,7 +73,7 @@ const Index = () => {
       </header>
 
       <main className="px-4 py-6 pb-10 space-y-5 max-w-md mx-auto">
-        {/* Vehicle Info - Navy card */}
+        {/* Vehicle Info - Always visible */}
         <Section delay={0}>
           <div className="auto-card-navy p-6 shimmer">
             <div className="flex items-center gap-3.5 mb-3">
@@ -57,61 +97,102 @@ const Index = () => {
           </div>
         </Section>
 
-        {/* Primary Contact */}
+        {/* Emergency Numbers - Always visible */}
         <Section delay={1}>
-          <SectionTitle>Primary Number</SectionTitle>
-          <div className="auto-card p-5">
-            <p className="text-center text-base font-semibold tracking-[0.2em] text-foreground">+91 ******5584</p>
-            <ContactButtons
-              onCall={() => setModalAction({ type: "call", number: "+918951225584" })}
-              onWhatsApp={() => setModalAction({ type: "whatsapp", number: "+918951225584" })}
-            />
-          </div>
-        </Section>
-
-        {/* Alternate Contact */}
-        <Section delay={2}>
-          <SectionTitle>Alternate Number</SectionTitle>
-          <div className="auto-card p-5">
-            <p className="text-center text-base font-semibold tracking-[0.2em] text-foreground">+91 ******7067</p>
-            <ContactButtons
-              onCall={() => setModalAction({ type: "call", number: "+919108167067" })}
-              onWhatsApp={() => setModalAction({ type: "whatsapp", number: "+919108167067" })}
-            />
-          </div>
-        </Section>
-
-        {/* Location */}
-        <Section delay={3}>
-          <SectionTitle>Location</SectionTitle>
-          <div className="auto-card p-5">
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <MapPin size={14} className="text-muted-foreground" />
-              <p className="text-sm text-muted-foreground text-center leading-relaxed">
-                Amar Layout, Bangalore, Karnataka
-              </p>
-            </div>
-            <p className="text-xs text-muted-foreground/60 text-center">560045, India</p>
-            <div className="mt-4 flex justify-center">
-              <button
-                onClick={() =>
-                  window.open(
-                    "https://www.google.com/maps/search/Amar+Layout+Bangalore+Karnataka+560045+India",
-                    "_blank"
-                  )
-                }
-                className="btn-3d btn-3d-call flex items-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold"
-              >
-                <MapPin size={16} />
-                Show on Map
-                <ChevronRight size={14} className="opacity-60" />
-              </button>
+          <SectionTitle>Emergency Numbers</SectionTitle>
+          <div className="auto-card p-4">
+            <div className="grid grid-cols-2 gap-2.5">
+              {EMERGENCY_NUMBERS.map((e) => (
+                <a
+                  key={e.number}
+                  href={`tel:${e.number}`}
+                  className="flex items-center gap-2.5 rounded-xl p-3 transition-all active:scale-95 border border-destructive/10 hover:border-destructive/30"
+                  style={{ background: "hsl(var(--destructive) / 0.05)" }}
+                >
+                  <Phone size={14} style={{ color: "hsl(var(--destructive))" }} />
+                  <div>
+                    <p className="text-xs font-bold" style={{ color: "hsl(var(--destructive))" }}>{e.number}</p>
+                    <p className="text-[10px] text-muted-foreground">{e.label}</p>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
         </Section>
+
+        {/* Contact & Location - Conditional */}
+        {showDetails ? (
+          <>
+            {/* Primary Contact */}
+            <Section delay={2}>
+              <SectionTitle>Primary Number</SectionTitle>
+              <div className="auto-card p-5">
+                <p className="text-center text-base font-semibold tracking-[0.2em] text-foreground">+91 ******5584</p>
+                <ContactButtons
+                  onCall={() => setModalAction({ type: "call", number: "+918951225584" })}
+                  onWhatsApp={() => setModalAction({ type: "whatsapp", number: "+918951225584" })}
+                />
+              </div>
+            </Section>
+
+            {/* Alternate Contact */}
+            <Section delay={3}>
+              <SectionTitle>Alternate Number</SectionTitle>
+              <div className="auto-card p-5">
+                <p className="text-center text-base font-semibold tracking-[0.2em] text-foreground">+91 ******7067</p>
+                <ContactButtons
+                  onCall={() => setModalAction({ type: "call", number: "+919108167067" })}
+                  onWhatsApp={() => setModalAction({ type: "whatsapp", number: "+919108167067" })}
+                />
+              </div>
+            </Section>
+
+            {/* Location */}
+            <Section delay={4}>
+              <SectionTitle>Location</SectionTitle>
+              <div className="auto-card p-5">
+                <div className="flex items-center justify-center gap-2 mb-1">
+                  <MapPin size={14} className="text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground text-center leading-relaxed">
+                    Amar Layout, Bangalore, Karnataka
+                  </p>
+                </div>
+                <p className="text-xs text-muted-foreground/60 text-center">560045, India</p>
+                <div className="mt-4 flex justify-center">
+                  <button
+                    onClick={() =>
+                      window.open(
+                        "https://www.google.com/maps/search/Amar+Layout+Bangalore+Karnataka+560045+India",
+                        "_blank"
+                      )
+                    }
+                    className="btn-3d btn-3d-call flex items-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold"
+                  >
+                    <MapPin size={16} />
+                    Show on Map
+                    <ChevronRight size={14} className="opacity-60" />
+                  </button>
+                </div>
+              </div>
+            </Section>
+          </>
+        ) : (
+          <Section delay={2}>
+            <div className="auto-card p-6">
+              <div className="flex flex-col items-center gap-3 text-center">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl" style={{ background: "hsl(var(--navy) / 0.08)" }}>
+                  <AlertCircle size={22} className="text-primary" />
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed max-w-[260px]">
+                  User has turned off contact details. They may be driving or vehicle not in use.
+                </p>
+              </div>
+            </div>
+          </Section>
+        )}
 
         {/* Custom Sticker CTA */}
-        <Section delay={4}>
+        <Section delay={showDetails ? 5 : 3}>
           <div className="auto-card-navy p-6 animate-glow-pulse">
             <div className="flex items-center justify-center gap-2 mb-1">
               <Sparkles size={14} className="opacity-70" />
@@ -133,15 +214,29 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="py-6" style={{ background: `linear-gradient(180deg, hsl(220 65% 15%), hsl(220 65% 10%))` }}>
-        <p className="text-center text-xs font-medium" style={{ color: "hsl(0 0% 100% / 0.5)" }}>
+        <p className="text-center text-xs font-medium mb-2" style={{ color: "hsl(0 0% 100% / 0.5)" }}>
           © 2026 Registered REACH.MME
         </p>
+        <button
+          onClick={() => setUserPanelOpen(true)}
+          className="block mx-auto text-[10px] underline underline-offset-2 transition-colors hover:opacity-80"
+          style={{ color: "hsl(0 0% 100% / 0.3)" }}
+        >
+          User Side – Manage Details
+        </button>
       </footer>
 
       <WarningModal
         open={!!modalAction}
         onCancel={() => setModalAction(null)}
         onContinue={handleContinue}
+      />
+
+      <UserPanel
+        open={userPanelOpen}
+        onClose={() => setUserPanelOpen(false)}
+        showDetails={showDetails}
+        onToggle={setShowDetails}
       />
     </div>
   );
